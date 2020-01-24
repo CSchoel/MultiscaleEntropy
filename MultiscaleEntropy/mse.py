@@ -90,7 +90,7 @@ def sample_entropy(x, m=[2], r=[0.15], sd=None, return_type='dict', safe_mode=Fa
         for mm in tmp_m:
             count[mm] = 0
 
-        for j in range(1, len(x)-min(m)+1):
+        for j in range(1, len(x)-max(tmp_m)+1):
             cont = 0
             for inc in range(0, len(x)-j):
                 if abs(x[inc]-x[j+inc]) < threshold:
@@ -98,11 +98,13 @@ def sample_entropy(x, m=[2], r=[0.15], sd=None, return_type='dict', safe_mode=Fa
                 elif cont > 0:
                     for mm in tmp_m:
                         tmp = cont - mm + 1
+                        tmp = min(tmp, len(x) - (inc - cont + j + max(tmp_m) - 1))
                         count[mm] += tmp if tmp > 0 else 0
                     cont = 0
             if cont > 0:
                 for mm in tmp_m:
                     tmp = cont - mm + 1
+                    tmp = min(tmp,  cont - max(tmp_m) + 1)
                     count[mm] += tmp if tmp > 0 else 0
         for mm in m:
             if count[mm+1] == 0 or count[mm] == 0:
